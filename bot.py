@@ -122,7 +122,6 @@ async def info(ctx, username):
     await ctx.send('\n'.join([f"{i}: {info[i]}" for i in info]))
 
 @bot.command(name='ping')
-@commands.has_role(ADMIN_ROLE)
 async def ping(ctx) :
     await ctx.send(":ping_pong: Pong")
 
@@ -135,21 +134,6 @@ async def whoami(ctx) :
 @commands.has_role(ADMIN_ROLE)
 async def clear(ctx, amount=3) :
     await ctx.channel.purge(limit=amount)
-
-
-@bot.command(name='99', help='Responds with a random quote from Brooklyn 99')
-async def nine_nine(ctx):
-    brooklyn_99_quotes = [
-        'I\'m the human form of the 💯 emoji.',
-        'Bingpot!',
-        (
-            'Cool. Cool cool cool cool cool cool cool, '
-            'no doubt no doubt no doubt no doubt.'
-        ),
-    ]
-
-    response = random.choice(brooklyn_99_quotes)
-    await ctx.send(response)
 
 @bot.event
 async def on_command_error(ctx, error):
