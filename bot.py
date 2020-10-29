@@ -19,7 +19,7 @@ ADMIN_ROLE = os.getenv('ADMIN_ROLE')
 STUDENT_ROLE = os.getenv('STUDENT_ROLE')
 
 intents = discord.Intents.all()
-bot = commands.Bot(command_prefix='$', intents=intents)
+bot = commands.Bot(command_prefix='.', intents=intents)
 
 @bot.event
 async def on_ready():
@@ -120,6 +120,22 @@ async def info(ctx, username):
     info = requests.get(ION_API_URL+f'/profile/{username}', auth=requests.auth.HTTPBasicAuth(ION_USER, ION_PASS)).json()
     print(schedule)
     await ctx.send('\n'.join([f"{i}: {info[i]}" for i in info]))
+
+@bot.command()
+@commands.has_role(ADMIN_ROLE)
+async def ping(ctx) :
+    await ctx.send(f"🏓 Pong with {str(round(client.latency, 2))}")
+
+@bot.command(name="whoami")
+@commands.has_role(ADMIN_ROLE)
+async def whoami(ctx) :
+    await ctx.send(f"You are {ctx.message.author.name}")
+
+@bot.command()
+@commands.has_role(ADMIN_ROLE)
+async def clear(ctx, amount=3) :
+    await ctx.channel.purge(limit=amount)
+
 
 @bot.command(name='99', help='Responds with a random quote from Brooklyn 99')
 async def nine_nine(ctx):
