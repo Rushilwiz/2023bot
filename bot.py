@@ -124,7 +124,7 @@ async def info(ctx, username):
 @bot.command(name='ping')
 @commands.has_role(ADMIN_ROLE)
 async def ping(ctx) :
-    await ctx.send(f"🏓 Pong with {str(round(client.latency, 2))}")
+    await ctx.send(f"🏓 Pong")
 
 @bot.command(name="whoami")
 @commands.has_role(ADMIN_ROLE)
