@@ -121,7 +121,7 @@ async def info(ctx, username):
     print(schedule)
     await ctx.send('\n'.join([f"{i}: {info[i]}" for i in info]))
 
-@bot.command()
+@bot.command(name='ping')
 @commands.has_role(ADMIN_ROLE)
 async def ping(ctx) :
     await ctx.send(f"🏓 Pong with {str(round(client.latency, 2))}")
@@ -131,7 +131,7 @@ async def ping(ctx) :
 async def whoami(ctx) :
     await ctx.send(f"You are {ctx.message.author.name}")
 
-@bot.command()
+@bot.command(name='clear')
 @commands.has_role(ADMIN_ROLE)
 async def clear(ctx, amount=3) :
     await ctx.channel.purge(limit=amount)
