@@ -171,6 +171,39 @@ async def clear(ctx, amount=5) :
 async def clear(ctx, amount=5) :
     await ctx.channel.purge(limit=amount)
 
+@bot.command(name='clear_channel')
+@commands.has_role(ADMIN_ROLE)
+async def clear_channel(ctx):
+
+    await ctx.send("aight listen this will remove ***EVERYTHING*** in this channel, reply `Yes` (within the next 5s) if you really want to do this.")
+    def check(m):
+        return m.content.lower() == "yes"
+
+    try:
+        msg = await bot.wait_for("message", check=check, timeout=5.0)
+    except:
+        await ctx.send("ok, I'm not doing it.")
+    else:
+        await ctx.send("Your funeral!")
+        await ctx.channel.purge()
+
+@bot.command(name='purge_channel')
+@commands.has_role(ADMIN_ROLE)
+async def purge_channel(ctx):
+
+    await ctx.send("aight listen this will remove ***EVERYTHING*** in this channel, reply `Yes` (within the next 5s) if you really want to do this.")
+    def check(m):
+        return m.content.lower() == "yes"
+
+    try:
+        msg = await bot.wait_for("message", check=check, timeout=5.0)
+    except:
+        await ctx.send("ok, I'm not doing it.")
+    else:
+        await ctx.send("Your funeral!")
+        for i in range(5):
+            await ctx.channel.purge(limit=999)
+
 @bot.event
 async def on_command_error(ctx, error):
     
