@@ -80,7 +80,6 @@ async def on_member_join(member):
                 guild = await bot.fetch_guild(GUILD)
                 role = get(guild.roles, name="Student")
                 await member.add_roles(role)
-                print(nick)
                 await member.edit(nick=nick)
                 await member.dm_channel.send(
                     f'Good stuff :sparkles:{member.mention}:sparkles:, you just got the Student role on the TJ 2023 discord server, and you should be able to access all the channels!'
@@ -100,11 +99,27 @@ async def on_member_join(member):
             f'Bummer dude, but don\'t worry, just DM any of the Class 🅱️ouncil (@Rushilwiz#4303) and they\'ll get it fixed for u ;)'
         ) 
 
+def remove_html_tags(text):
+    """Remove html tags from a string"""
+    import re
+    clean = re.compile('<.*?>')
+    return re.sub(clean, '', text)
+
 @bot.command(name='schedule', help='Gets schedule off Ion')
 async def schedule(ctx):
     schedule = requests.get(ION_API_URL+'/schedule', auth=requests.auth.HTTPBasicAuth(ION_USER, ION_PASS)).json()
-    print(schedule)
-    await ctx.send('\n'.join([f"{i['name']} {i['start']}-{i['end']}" for i in schedule['results'][0]['day_type']['blocks']]))
+    try:
+        # await ctx.send('\n'.join([f"{i['name']} {i['start']}-{i['end']}" for i in schedule['results'][0]['day_type']['blocks']]))
+
+        title = remove_html_tags(schedule['results'][0]['day_type']['name'])
+        if 'blue' in title.lower():
+            embed = discord.Embed(title=remove_html_tags(schedule['results'][0]['day_type']['name']), color=0x779ecb) #,color=Hex code , color='ff0000'
+        elif 'red' in title.lower():
+            embed = discord.Embed(title=remove_html_tags(schedule['results'][0]['day_type']['name']), color=0xff0000)
+        embed.add_field(name="Blocks:", value='\n'.join([f"{i['name']} {i['start']}-{i['end']}" for i in schedule['results'][0]['day_type']['blocks']]))
+        await ctx.send(embed=embed)
+    except:
+        await ctx.send('ayo sorry dawg I couldn\'t fetch the schedule')
 
 @bot.command(name='roll_dice', help='Simulates rolling dice.')
 async def roll(ctx, number_of_dice: int, number_of_sides: int):
@@ -118,7 +133,6 @@ async def roll(ctx, number_of_dice: int, number_of_sides: int):
 @commands.has_role(ADMIN_ROLE)
 async def info(ctx, username):
     info = requests.get(ION_API_URL+f'/profile/{username}', auth=requests.auth.HTTPBasicAuth(ION_USER, ION_PASS)).json()
-    print(schedule)
     await ctx.send('\n'.join([f"{i}: {info[i]}" for i in info]))
 
 @bot.command(name='ping')
