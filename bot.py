@@ -7,6 +7,7 @@ from discord.ext import commands
 from discord.utils import get
 from dotenv import load_dotenv
 
+import logging
 
 load_dotenv()
 
@@ -117,9 +118,23 @@ async def schedule(ctx):
         elif 'red' in title.lower():
             embed = discord.Embed(title=remove_html_tags(schedule['results'][0]['day_type']['name']), color=0xff0000)
         embed.add_field(name="Blocks:", value='\n'.join([f"{i['name']} {i['start']}-{i['end']}" for i in schedule['results'][0]['day_type']['blocks']]))
-        await ctx.send(embed=embed)
+        message = await ctx.send(embed=embed)
+        for emoji in ('🇮', '🇴', '🇳'):
+            await message.add_reaction(emoji)
     except:
         await ctx.send('ayo sorry dawg I couldn\'t fetch the schedule')
+
+@bot.command(name='announcements', help='Gets announcements off Ion')
+async def schedule(ctx):
+    announcements = requests.get(ION_API_URL+'/announcements', auth=requests.auth.HTTPBasicAuth(ION_USER, ION_PASS)).json()
+    #try:
+    embed = discord.Embed(title="Announcements:", url="https://ion.tjhsst.edu/")
+    for announcement in announcements['results'][:5]:
+        embed.add_field(name=remove_html_tags(announcement['title']), value=remove_html_tags(announcement['content'])[:500]+'...', inline=False)
+    message = await ctx.send(embed=embed)
+    for emoji in ('🇮', '🇴', '🇳'):
+        await message.add_reaction(emoji)
+
 
 @bot.command(name='roll_dice', help='Simulates rolling dice.')
 async def roll(ctx, number_of_dice: int, number_of_sides: int):
@@ -134,6 +149,8 @@ async def roll(ctx, number_of_dice: int, number_of_sides: int):
 async def info(ctx, username):
     info = requests.get(ION_API_URL+f'/profile/{username}', auth=requests.auth.HTTPBasicAuth(ION_USER, ION_PASS)).json()
     await ctx.send('\n'.join([f"{i}: {info[i]}" for i in info]))
+    for emoji in ('🇮', '🇴', '🇳'):
+        await message.add_reaction(emoji)
 
 @bot.command(name='ping')
 async def ping(ctx) :
@@ -144,16 +161,21 @@ async def ping(ctx) :
 async def whoami(ctx) :
     await ctx.send(f"You are {ctx.message.author.name}")
 
+@bot.command(name='purge')
+@commands.has_role(ADMIN_ROLE)
+async def clear(ctx, amount=5) :
+    await ctx.channel.purge(limit=amount)
+
 @bot.command(name='clear')
 @commands.has_role(ADMIN_ROLE)
-async def clear(ctx, amount=3) :
+async def clear(ctx, amount=5) :
     await ctx.channel.purge(limit=amount)
 
 @bot.event
 async def on_command_error(ctx, error):
     
     if isinstance(error, commands.errors.CheckFailure):
-        await ctx.send('You don\'t have the correct role for this command. weeb.')
+        await ctx.send('You don\'t have the correct permissions for this command. :billed_cap:.')
 @bot.event
 async def on_error(event, *args, **kwargs):
     with open('err.log', 'a') as f:
