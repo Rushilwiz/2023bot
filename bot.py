@@ -19,6 +19,119 @@ ION_PASS = os.getenv('ION_PASS')
 ADMIN_ROLE = os.getenv('ADMIN_ROLE')
 STUDENT_ROLE = os.getenv('STUDENT_ROLE')
 
+
+ROLES = [
+    'Aileen Rashid',
+    'Alan Jiang',
+    'Alex Yung',
+    'Allen Huo',
+    'Ally Estabillo',
+    'Amy Wang',
+    'Anisha Talreja',
+    'Ann Shen',
+    'Archi Patel',
+    'Arnav Kadam',
+    'Benoy Sen',
+    'Bradley Cao',
+    'Caroline Xu',
+    'Charu Mehta',
+    'Christina Han',
+    'Cindy Yang',
+    'Daniel Kim',
+    'Daniel Shi',
+    'Danniel Cao',
+    'Dhanbee Suh',
+    'Elina Liu',
+    'Elisabeth Everhart',
+    'Elise Zhu',
+    'Ellie Chen',
+    'Elliott Lee',
+    'Bryan Hong',
+    'Emma Cox',
+    'Estan Rodriguez',
+    'Evelyne Breed',
+    'Harini Ramaswamy',
+    'Harshil Koyyalamudy',
+    'Helen Fu',
+    'Isabella Zhu',
+    'Jason Lee',
+    'Jay Varakala',
+    'Jayant Kammula',
+    'Jeffery Lin',
+    'Jeffrey Chen',
+    'Jeremy Kim',
+    'Jessica Chung',
+    'Jessica Wang',
+    'Johanna Lohmus',
+    'Jonathan Buchholz',
+    'Jordan Lee',
+    'Jorge Duggar',
+    'Katelyn Chen',
+    'Kisna Matta',
+    'Kritika Kumar',
+    'Leah Connell',
+    'Margaret Gao',
+    'Matthew Kim',
+    'Matthew Li',
+    'Maxx Yang',
+    'Myles Bao',
+    'Nathaniel Kenschaft',
+    'Neil Agrawal',
+    'Nihal Shah',
+    'Niyathi Vadlapatla',
+    'Noah Cha',
+    'Praneeth Bhandaru',
+    'Michael Sun',
+    'Raheel Shaik',
+    'Richard Xu',
+    'Rohan Kompella',
+    'Ronel Sahoo',
+    'Rushil Umaretiya',
+    'Samuel Gwon',
+    'Sameer Gabbita',
+    'Samuel Turner',
+    'Sashvad Satish Kumar',
+    'Satvik Matta',
+    'Sherry Yu',
+    'Shivank Bhimavarapu',
+    'Simrith Ranjan',
+    'Sophie King',
+    'Srishty Muthusekaran',
+    'Sumanth Moole',
+    'Suraj Vaddi',
+    'Tanishk Govil',
+    'Tanmai Kalisipudi',
+    'Tarini Basireddy',
+    'Tianhao Chen',
+    'Tyler Richard',
+    'Vani Gupta',
+    'Vinay Ayala',
+    'Vivian Gao',
+    'Yulee Kang',
+    'Amruta Rajeev',
+    'Arnav Jain',
+    'Aryan Rajput',
+    'Clarissa Ding',
+    'Grace Guan',
+    'Emily Cui',
+    'Alex Li',
+    'Vishal Kotha',
+    'Irene Ko',
+    'Jessica May',
+    'Kavyesh Pasham',
+    'Krisha Pahwa',
+    'Lillani Horcharoen',
+    'Patrick Gaucher',
+    'Aidan Ludwig',
+    'Anish Susarla',
+    'Rushil Umaretiya',
+    'Tiffany Lee',
+    'Sahishnu Hanumansetty',
+    'Victoria Wang',
+    'Wilson Chen',
+    'Deccan Maniam',
+]
+
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix='.', intents=intents)
 
@@ -164,7 +277,7 @@ async def whoami(ctx) :
 @bot.command(name='purge')
 @commands.has_role(ADMIN_ROLE)
 async def clear(ctx, amount=5) :
-    await ctx.channel.purge(limit=amount)
+    await ctx.channel.purge(limit=amount+1)
 
 @bot.command(name='clear')
 @commands.has_role(ADMIN_ROLE)
@@ -203,6 +316,37 @@ async def purge_channel(ctx):
         await ctx.send("Your funeral!")
         for i in range(5):
             await ctx.channel.purge(limit=999)
+
+@bot.command(name='members')
+@commands.has_role(ADMIN_ROLE)
+async def get_members(ctx):
+    for guild in bot.guilds:
+        if guild.name == 'TJ 2023':
+            break
+        
+    members = '\n - '.join([member.name for member in guild.members])
+    await ctx.send(f'Guild Members:\n - {members}\n Total: {len(guild.members)}')
+
+@bot.command(name='nicknames')
+@commands.has_role(ADMIN_ROLE)
+async def get_members(ctx):
+    guild = ctx.guild
+    members = '\n'.join([member.display_name for member in guild.members])
+    await ctx.send(f'Guild Members:\n{members}\n Total: {len(members)}')
+    for member in guild.members:
+        if member. == 278537478875381771:
+            role = discord.utils.get(guild.roles, name="DJ")
+            await member.add_roles(role)
+
+
+@bot.command(name='create-roles')
+@commands.has_role(ADMIN_ROLE)
+async def get_members(ctx):
+    guild = ctx.guild
+    for name in ROLES:
+        print(name)
+        await guild.create_role(name=name)
+
 
 @bot.event
 async def on_command_error(ctx, error):
