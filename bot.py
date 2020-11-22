@@ -333,10 +333,7 @@ async def get_members(ctx):
     guild = ctx.guild
     members = '\n'.join([member.display_name for member in guild.members])
     await ctx.send(f'Guild Members:\n{members}\n Total: {len(members)}')
-    for member in guild.members:
-        if member. == 278537478875381771:
-            role = discord.utils.get(guild.roles, name="DJ")
-            await member.add_roles(role)
+
 
 
 @bot.command(name='create-roles')
